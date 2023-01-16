@@ -1,35 +1,54 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
+import { ALL_MONS } from "./data/mons";
+
+const MAX_DEX_ID = 493;
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [mon, setMon] = useState(0);
+  const [isCopied, setCopied] = useState(false);
+
+  const getRandomMon = async () => {
+    setCopied(false);
+    const pokedexNumber = Math.floor(Math.random() * MAX_DEX_ID) + 1;
+    setMon(pokedexNumber);
+  };
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="flex flex-col px-6 py-12 h-screen justify-between">
+        <button onClick={getRandomMon}>get random pokemon name</button>
+        <div>
+          {mon ? (
+            <div className="flex  flex-col items-center">
+              <div className="flex gap-2 mb-8 items-center justify-center">
+                <h3
+                  style={{ color: isCopied ? "green" : "" }}
+                  className="text-3xl"
+                >
+                  {ALL_MONS[mon].toUpperCase()}
+                </h3>
+                <button
+                  type="button"
+                  style={{ border: "1px solid white" }}
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(
+                      ALL_MONS[mon].toLowerCase()
+                    );
+                    setCopied(true);
+                  }}
+                >
+                  copy
+                </button>
+              </div>
+              <img
+                width={200}
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${mon}.png`}
+                alt="mon image"
+              />
+            </div>
+          ) : null}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button
-          className="bg-amber-500"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }
