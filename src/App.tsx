@@ -10,11 +10,11 @@ export type MonType = {
 };
 
 function App() {
-  const [showMon, setShowMon] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [mon, setMon] = useState<MonType>();
 
   const getRandomMon = async () => {
-    setShowMon(false);
+    setLoading(true);
     const pokedexNumber = Math.floor(Math.random() * MAX_DEX_ID) + 1;
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokedexNumber}.png`;
     setMon({
@@ -33,6 +33,7 @@ function App() {
             onClick={getRandomMon}
             type="button"
             className="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
+            disabled={isLoading}
           >
             Generate
           </button>
@@ -41,10 +42,10 @@ function App() {
           src={mon?.imageUrl}
           style={{ display: "none" }}
           onLoad={() => {
-            setShowMon(true);
+            setLoading(false);
           }}
         />
-        <div>{mon && showMon ? <Mon {...mon} /> : null}</div>
+        <div>{mon && !isLoading ? <Mon {...mon} /> : null}</div>
       </div>
     </div>
   );
