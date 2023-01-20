@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Mon } from "./components/Mon";
 import { ALL_MONS } from "./data/mons";
+import pokeball from ".//pokeball512.png";
 
 const MAX_DEX_ID = 493;
 
 export type MonType = {
+  isShowPlaceholder?: boolean;
   name: string;
   imageUrl: string;
 };
@@ -18,7 +20,7 @@ function App() {
     const pokedexNumber = Math.floor(Math.random() * MAX_DEX_ID) + 1;
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokedexNumber}.png`;
     setMon({
-      name: ALL_MONS[pokedexNumber],
+      name: ALL_MONS[pokedexNumber].toUpperCase(),
       imageUrl,
     });
   };
@@ -32,7 +34,7 @@ function App() {
           <button
             onClick={getRandomMon}
             type="button"
-            className="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
+            className="border-double border-4 border-gray-600 inline-block p-3 bg-gray-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-500 hover:border-gray-500 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:border-blue-400 focus:ring-0 active:bg-gray-500 active:shadow-lg transition duration-150 ease-in-out"
             disabled={isLoading}
           >
             Generate
@@ -45,7 +47,15 @@ function App() {
             setLoading(false);
           }}
         />
-        <div>{mon && !isLoading ? <Mon {...mon} /> : null}</div>
+        <div>
+          {mon && !isLoading ? (
+            <Mon {...mon} />
+          ) : isLoading ? (
+            <Mon isShowPlaceholder name="Loading..." imageUrl={pokeball} />
+          ) : (
+            <Mon isShowPlaceholder name="" imageUrl={pokeball} />
+          )}
+        </div>
       </div>
     </div>
   );
